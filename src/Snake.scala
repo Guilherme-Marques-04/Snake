@@ -1,0 +1,3 @@
+object Snake extends App {
+
+}
