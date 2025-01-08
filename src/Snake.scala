@@ -1,3 +1,5 @@
+import hevs.graphics.FunGraphics
+import java.awt.Color
 import scala.util.Random
 import hevs.graphics.FunGraphics
 import java.awt.event.{KeyAdapter, KeyEvent}
@@ -10,7 +12,7 @@ object Snake extends App {
 
     // put the snake in the middle left of the board
     // body of the snake
-    out(1)(out(0).length / 2) = 3
+    out(1)(out(0).length / 2) = 1
 
     // Head of the snake
     out(2)(out(0).length / 2) = 2
@@ -23,8 +25,8 @@ object Snake extends App {
   }
 
   // Choose length of board
-  var x: Int = Input.readInt()
-  var y: Int = Input.readInt()
+  var x: Int = 25
+  var y: Int = 25
   var length: Int = x*y
 
   // Create the array
@@ -61,12 +63,19 @@ object Snake extends App {
     board
   }
 
+  def displayGame(): Unit = {
+    val land: FunGraphics = new FunGraphics(625, 625)
+    var a: Array[Array[Int]] = generateSnake(createArray())
+  }
+
   // test print board
-  var b: Array[Array[Int]] = createArray()
-  for(i <- b.indices){
-    println("")
-    for(j <- b(i).indices){
-      print(b(i)(j))
+  def printBoard(a: Array[Array[Int]]): Unit = {
+    for (i <- a.indices) {
+      println("")
+      for (j <- a(i).indices) {
+        print(a(i)(j))
+      }
     }
   }
+  printBoard(generateSnake(createArray()))
 }
