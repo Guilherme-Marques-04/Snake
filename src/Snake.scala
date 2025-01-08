@@ -5,6 +5,11 @@ import hevs.graphics.FunGraphics
 import java.awt.event.{KeyAdapter, KeyEvent}
 
 object Snake extends App {
+  // variables
+  var snakeDirection: Int = 0x27
+  var snakeHeadLocationX : Int = 0
+  var snakeHeadLocationY : Int = 0
+
   def generateSnake(board : Array[Array[Int]]) : Array[Array[Int]] = {
 
     var snakeSize : Int = 2
@@ -20,8 +25,37 @@ object Snake extends App {
     return out
   }
 
-  def moveSnake() : Unit = {
+  def moveSnake(land : FunGraphics, board : Array[Array[Int]]) : Unit = {
+    val timer = new java.util.Timer()
 
+    val task = new java.util.TimerTask {
+
+      def run() = {
+        snakeDirection match {
+          case 0x25 // left
+          => board(snakeHeadLocationY - 1)(snakeHeadLocationX)
+
+          case 0x26 // up
+          => board(snakeHeadLocationY)(snakeHeadLocationX - 1)
+
+          case 0x27 // right
+          => board(snakeHeadLocationY + 1)(snakeHeadLocationX)
+
+          case 0x28 // down
+          => board(snakeHeadLocationY)(snakeHeadLocationX + 1)
+        }
+
+        land.setKeyManager(new KeyAdapter(){
+          override def keyPressed(e: KeyEvent): Unit = {
+            if (e.getKeyCode == KeyEvent.VK_LEFT && snakeDirection != KeyEvent.VK_RIGHT) snakeDirection = 0x25
+            if (e.getKeyCode == KeyEvent.VK_UP && snakeDirection != KeyEvent.VK_DOWN) snakeDirection  = 0x26
+            if (e.getKeyCode == KeyEvent.VK_RIGHT && snakeDirection != KeyEvent.VK_LEFT) snakeDirection = 0x27
+            if (e.getKeyCode == KeyEvent.VK_DOWN && snakeDirection != KeyEvent.VK_UP) snakeDirection = 0x28
+          }
+        })
+      }
+    }
+    timer.schedule(task, 1000L, 1000L)
   }
 
   // Choose length of board
@@ -43,9 +77,6 @@ object Snake extends App {
     board
   }
 
-  // variables
-  var snakeDirection: Int = 0x27
-
   // generate random position of apple
   def generateApple(): Array[Array[Int]] = {
     var board: Array[Array[Int]] = generateSnake(createArray())
@@ -64,8 +95,13 @@ object Snake extends App {
   }
 
   def displayGame(): Unit = {
-    val land: FunGraphics = new FunGraphics(625, 625)
-    var a: Array[Array[Int]] = generateSnake(createArray())
+    val land: FunGraphics = new FunGraphics(625, 625, "Snake")
+    var table : Array[Array[Int]] = createArray()
+    table = generateSnake(table)
+
+    // variables
+    snakeHeadLocationX = table(0).length / 2
+    snakeHeadLocationY = 2
   }
 
   // test print board
@@ -78,4 +114,6 @@ object Snake extends App {
     }
   }
   printBoard(generateSnake(createArray()))
+
+
 }
