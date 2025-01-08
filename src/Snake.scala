@@ -1,7 +1,6 @@
-import com.sun.jdi.connect.spi.TransportService.ListenKey
-
-import java.awt.event.KeyEvent
 import scala.util.Random
+import hevs.graphics.FunGraphics
+import java.awt.event.{KeyAdapter, KeyEvent}
 
 object Snake extends App {
   def generateSnake(board : Array[Array[Int]]) : Array[Array[Int]] = {
@@ -43,7 +42,7 @@ object Snake extends App {
   }
 
   // variables
-  var snakeDirection = null // toDo
+  var snakeDirection: Int = 0x27
 
   // generate random position of apple
   def generateApple(): Array[Array[Int]] = {
