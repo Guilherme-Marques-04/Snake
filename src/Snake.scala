@@ -91,11 +91,6 @@ object Snake extends App {
     var table : Array[Array[Int]] = createArray()
     table = generateSnake(table)
 
-    // variables
-    snakeHeadLocationX = table(0).length / 2
-    snakeHeadLocationY = 2
-  }
-
     var posX: Int = -25
     var posY: Int = -25
     val a: Array[Array[Int]] = generateSnake(createArray())
@@ -114,6 +109,10 @@ object Snake extends App {
         }
       }
     }
+    // variables
+    snakeHeadLocationX = table(0).length / 2
+    snakeHeadLocationY = 2
   }
+
   displayGame()
 }
