@@ -5,18 +5,24 @@ object Snake extends App {
     var out : Array[Array[Int]] = board.clone
 
     // put the snake in the middle left of the board
-    out(1)(out(0).length) = 3
-    out(2)(out(0).length) = 2
+    // body of the snake
+    out(1)(out(0).length / 2) = 3
+
+    // Head of the snake
+    out(2)(out(0).length / 2) = 2
 
     return out
   }
 
-  val apple: Int = 1
-  val snakeHead: Int = 2
-  val snake: Int = 3
+  def moveSnake() : Unit = {
+
+  }
 
   def createArray(x:Int, y:Int): Array[Array[Int]] ={
     val array: Array[Array[Int]] = Array.ofDim(x,y)
     array
   }
+
+  // variables
+  var snakeDirection = null // toDo
 }
