@@ -1,3 +1,8 @@
+import com.sun.jdi.connect.spi.TransportService.ListenKey
+
+import java.awt.event.KeyEvent
+import scala.util.Random
+
 object Snake extends App {
   def generateSnake(board : Array[Array[Int]]) : Array[Array[Int]] = {
 
@@ -18,11 +23,51 @@ object Snake extends App {
 
   }
 
-  def createArray(x:Int, y:Int): Array[Array[Int]] ={
-    val array: Array[Array[Int]] = Array.ofDim(x,y)
-    array
+  // Choose length of board
+  var x: Int = Input.readInt()
+  var y: Int = Input.readInt()
+  var length: Int = x*y
+
+  // Create the array
+  def createArray(): Array[Array[Int]] = {
+    if (x < 10 || y < 10) {
+      x = 10
+      y = 10
+    } else if (x > 50 || y > 50) {
+      x = 50
+      y = 50
+    }
+
+    val board: Array[Array[Int]] = Array.ofDim(x, y)
+    board
   }
 
   // variables
   var snakeDirection = null // toDo
+
+  // generate random position of apple
+  def generateApple(): Array[Array[Int]] = {
+    var board: Array[Array[Int]] = generateSnake(createArray())
+    while(x == 1) {
+      var x: Int = 0
+      var randomX: Int = Random.between(0, length)
+      var randomY: Int = Random.between(0, length)
+      if (board(randomX)(randomY) == 0) {
+        board(randomX)(randomY) = -1
+        x = 1
+      } else {
+        board(randomX)(randomY) = 0
+      }
+    }
+    board
+  }
+
+  // test print board
+  var b: Array[Array[Int]] = createArray()
+  for(i <- b.indices){
+    println("")
+    for(j <- b(i).indices){
+      print(b(i)(j))
+    }
+  }
 }
