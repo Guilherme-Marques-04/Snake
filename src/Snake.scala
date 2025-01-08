@@ -75,6 +75,5 @@ object Snake extends App {
       }
     }
   }
-  graphic()
   printBoard(generateSnake(createArray()))
 }
