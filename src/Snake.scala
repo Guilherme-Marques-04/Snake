@@ -9,13 +9,11 @@ object Snake extends App {
 
     var snakeSize : Int = 2
     var out : Array[Array[Int]] = board.clone
-
     // put the snake in the middle left of the board
     // body of the snake
-    out(1)(out(0).length / 2) = 1
-
+    out(out(0).length / 2)(1) = 1
     // Head of the snake
-    out(2)(out(0).length / 2) = 2
+    out(out(0).length / 2)(2) = 2
 
     return out
   }
@@ -24,21 +22,13 @@ object Snake extends App {
 
   }
 
-  // Choose length of board
+  // length of board
   var x: Int = 25
   var y: Int = 25
   var length: Int = x*y
 
   // Create the array
   def createArray(): Array[Array[Int]] = {
-    if (x < 10 || y < 10) {
-      x = 10
-      y = 10
-    } else if (x > 50 || y > 50) {
-      x = 50
-      y = 50
-    }
-
     val board: Array[Array[Int]] = Array.ofDim(x, y)
     board
   }
@@ -63,19 +53,28 @@ object Snake extends App {
     board
   }
 
+  // display graphic
   def displayGame(): Unit = {
-    val land: FunGraphics = new FunGraphics(625, 625)
-    var a: Array[Array[Int]] = generateSnake(createArray())
-  }
+    val land: FunGraphics = new FunGraphics(650, 650)
 
-  // test print board
-  def printBoard(a: Array[Array[Int]]): Unit = {
-    for (i <- a.indices) {
-      println("")
-      for (j <- a(i).indices) {
-        print(a(i)(j))
+    var posX: Int = -25
+    var posY: Int = -25
+    val a: Array[Array[Int]] = generateSnake(createArray())
+
+    for(i <- a.indices){
+      posY += 25
+      posX = -25
+      for(j <- a(i).indices){
+        posX += 25
+        if(a(i)(j) == 0){
+          land.setColor(Color.blue)
+          land.drawFillRect(posX, posY, posX+25, posY+25)
+        } else if(a(i)(j) >= 1) {
+          land.setColor(Color.green)
+          land.drawFillRect(posX, posY, posX + 25, posY + 25)
+        }
       }
     }
   }
-  printBoard(generateSnake(createArray()))
+  displayGame()
 }
