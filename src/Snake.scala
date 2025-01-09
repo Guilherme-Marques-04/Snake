@@ -16,11 +16,11 @@ object Snake extends App {
   var board: Array[Array[Int]] = Array.ofDim(boardSizeX, boardSizeY)
 
   //generate snake
-  board = generateSnake(board)
+  generateSnake()
 
   var snakeSize: Int = 2
 
-  var snakeDirection: Int = 0x27
+  var snakeDirection: Int = 38
   var snakeHeadLocationX: Int = board(0).length / 2
   var snakeHeadLocationY: Int = 2
 
@@ -28,24 +28,21 @@ object Snake extends App {
   var randomX: Int = 0
   var randomY: Int = 0
 
-  def generateSnake(board: Array[Array[Int]]): Array[Array[Int]] = {
+  var gameOver: Boolean = false
+
+  val timer = new java.util.Timer()
+
+  def generateSnake(): Unit = {
 
     snakeSize = 2
-    var out: Array[Array[Int]] = board.clone
 
     // put the snake in the middle left of the board
     // body of the snake
-    out(out(0).length / 2)(1) = 1
-    out(out(0).length / 2)(2) = 2
-    // Head of the snake
-    out(out(0).length / 2)(3) = 3
-
-    return out
+    board(board(0).length / 2)(1) = 1
+    board(board(0).length / 2)(2) = 2
   }
 
   def moveSnake(): Unit = {
-    val timer = new java.util.Timer()
-
     val task = new java.util.TimerTask {
 
       def run() = {
@@ -63,37 +60,55 @@ object Snake extends App {
           => snakeHeadLocationX += 1
         }
 
-        checkIfSnakeEat()
+        checkSnakeInteraction()
 
-        board(snakeHeadLocationX)(snakeHeadLocationY) = snakeSize
+        if (gameOver == false) {
 
-        window.setKeyManager(new KeyAdapter() {
-          override def keyPressed(e: KeyEvent): Unit = {
-            if (e.getKeyCode == KeyEvent.VK_LEFT && snakeDirection != KeyEvent.VK_RIGHT) snakeDirection = 0x25
-            if (e.getKeyCode == KeyEvent.VK_UP && snakeDirection != KeyEvent.VK_DOWN) snakeDirection = 0x26
-            if (e.getKeyCode == KeyEvent.VK_RIGHT && snakeDirection != KeyEvent.VK_LEFT) snakeDirection = 0x27
-            if (e.getKeyCode == KeyEvent.VK_DOWN && snakeDirection != KeyEvent.VK_UP) snakeDirection = 0x28
-          }
-        })
+          board(snakeHeadLocationX)(snakeHeadLocationY) = snakeSize
 
-        for (i <- board.indices) {
-          for (j <- board.indices) {
-            if(board(i)(j) > 0) {
-              board(i)(j) -= 1
+          window.setKeyManager(new KeyAdapter() {
+            override def keyPressed(e: KeyEvent): Unit = {
+              if (e.getKeyCode == KeyEvent.VK_LEFT && snakeDirection != KeyEvent.VK_RIGHT) snakeDirection = 0x25
+              if (e.getKeyCode == KeyEvent.VK_UP && snakeDirection != KeyEvent.VK_DOWN) snakeDirection = 0x26
+              if (e.getKeyCode == KeyEvent.VK_RIGHT && snakeDirection != KeyEvent.VK_LEFT) snakeDirection = 0x27
+              if (e.getKeyCode == KeyEvent.VK_DOWN && snakeDirection != KeyEvent.VK_UP) snakeDirection = 0x28
+            }
+          })
+
+          for (i <- board.indices) {
+            for (j <- board.indices) {
+              if (board(i)(j) > 0) {
+                board(i)(j) -= 1
+              }
             }
           }
-        }
 
-        displayGame()
+          displayGame()
+        }
       }
     }
     timer.schedule(task, 100L, 100L)
   }
 
-  def checkIfSnakeEat() : Unit = {
+  def checkSnakeInteraction(): Unit = {
+    // Check if the snake eat the apple
     if (snakeHeadLocationX == randomX && snakeHeadLocationY == randomY) {
       generateApple()
       snakeSize += 1
+    }
+
+    if (snakeHeadLocationX >= 0 && snakeHeadLocationY >= 0) {
+      // Check if the snake hit himself
+      if (board(snakeHeadLocationX)(snakeHeadLocationY) > 0) {
+        gameOver = true
+        timer.cancel()
+      }
+    }
+
+    // Check if the snake hit the walls
+    if (snakeHeadLocationX >= boardSizeX - 1 || snakeHeadLocationX < 0 || snakeHeadLocationY >= boardSizeY - 1 || snakeHeadLocationY < 0) {
+      gameOver = true
+      timer.cancel()
     }
   }
 
@@ -137,6 +152,7 @@ object Snake extends App {
       }
     }
   }
+
   generateApple() // Generate for the first time
   moveSnake()
 }
