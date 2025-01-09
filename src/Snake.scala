@@ -24,6 +24,10 @@ object Snake extends App {
   var snakeHeadLocationX: Int = board(0).length / 2
   var snakeHeadLocationY: Int = 2
 
+  // Location of the apple
+  var randomX: Int = 0
+  var randomY: Int = 0
+
   def generateSnake(board: Array[Array[Int]]): Array[Array[Int]] = {
 
     snakeSize = 2
@@ -39,7 +43,7 @@ object Snake extends App {
     return out
   }
 
-  def moveSnake(land: FunGraphics, board: Array[Array[Int]]): Unit = {
+  def moveSnake(): Unit = {
     val timer = new java.util.Timer()
 
     val task = new java.util.TimerTask {
@@ -59,11 +63,11 @@ object Snake extends App {
           => snakeHeadLocationX += 1
         }
 
-        checkSnakeEat()
+        checkIfSnakeEat()
 
-        board(snakeHeadLocationX)(snakeHeadLocationY) += 1
+        board(snakeHeadLocationX)(snakeHeadLocationY) = snakeSize
 
-        land.setKeyManager(new KeyAdapter() {
+        window.setKeyManager(new KeyAdapter() {
           override def keyPressed(e: KeyEvent): Unit = {
             if (e.getKeyCode == KeyEvent.VK_LEFT && snakeDirection != KeyEvent.VK_RIGHT) snakeDirection = 0x25
             if (e.getKeyCode == KeyEvent.VK_UP && snakeDirection != KeyEvent.VK_DOWN) snakeDirection = 0x26
@@ -72,15 +76,25 @@ object Snake extends App {
           }
         })
 
-        // If the snake eat the apple
-        if (snakeHeadLocationX )
+        for (i <- board.indices) {
+          for (j <- board.indices) {
+            if(board(i)(j) > 0) {
+              board(i)(j) -= 1
+            }
+          }
+        }
+
+        displayGame()
       }
     }
     timer.schedule(task, 1000L, 1000L)
   }
 
-  def checkSnakeEat() : Unit = {
-
+  def checkIfSnakeEat() : Unit = {
+    if (snakeHeadLocationX == randomX && snakeHeadLocationY == randomY) {
+      generateApple()
+      snakeSize += 1
+    }
   }
 
   // generate random position of apple
@@ -88,8 +102,8 @@ object Snake extends App {
     // break while statement if apple isn't generate in the snake
     var isAppleGood: Boolean = true
     while (isAppleGood) {
-      var randomX: Int = Random.between(0, boardSizeX)
-      var randomY: Int = Random.between(0, boardSizeY)
+      randomX = Random.between(0, boardSizeX)
+      randomY = Random.between(0, boardSizeY)
       if (board(randomX)(randomY) == 0) {
         board(randomX)(randomY) = -1
         isAppleGood = false
@@ -123,5 +137,5 @@ object Snake extends App {
       }
     }
   }
-  displayGame()
+  moveSnake()
 }
