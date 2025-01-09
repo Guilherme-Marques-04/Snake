@@ -70,9 +70,9 @@ object Snake extends App {
           window.setKeyManager(new KeyAdapter() {
             override def keyPressed(e: KeyEvent): Unit = {
               if (e.getKeyCode == KeyEvent.VK_LEFT && snakeDirection != KeyEvent.VK_RIGHT) snakeDirection = 0x25
-              if (e.getKeyCode == KeyEvent.VK_UP && snakeDirection != KeyEvent.VK_DOWN) snakeDirection = 0x26
-              if (e.getKeyCode == KeyEvent.VK_RIGHT && snakeDirection != KeyEvent.VK_LEFT) snakeDirection = 0x27
-              if (e.getKeyCode == KeyEvent.VK_DOWN && snakeDirection != KeyEvent.VK_UP) snakeDirection = 0x28
+              else if (e.getKeyCode == KeyEvent.VK_UP && snakeDirection != KeyEvent.VK_DOWN) snakeDirection = 0x26
+              else if (e.getKeyCode == KeyEvent.VK_RIGHT && snakeDirection != KeyEvent.VK_LEFT) snakeDirection = 0x27
+              else if (e.getKeyCode == KeyEvent.VK_DOWN && snakeDirection != KeyEvent.VK_UP) snakeDirection = 0x28
             }
           })
 
@@ -88,7 +88,7 @@ object Snake extends App {
         }
       }
     }
-    timer.schedule(task, 100L, 100L)
+    timer.schedule(task, 40L, 40L)
   }
 
   def checkSnakeInteraction(): Unit = {
