@@ -7,13 +7,16 @@ import java.awt.event.{KeyAdapter, KeyEvent}
 object Snake extends App {
   // variables
   val windowSizeX: Int = 600
-  val windowSizeY: Int = 600
+  val windowSizeY: Int = 625
   val window: FunGraphics = new FunGraphics(windowSizeX, windowSizeY, "Snake")
 
   // Create the array
   val boardSizeX: Int = 25
   val boardSizeY: Int = 25
   var board: Array[Array[Int]] = Array.ofDim(boardSizeX, boardSizeY)
+
+  // score
+  var score: Int = -1
 
   //generate snake
   generateSnake()
@@ -103,6 +106,7 @@ object Snake extends App {
       if (board(snakeHeadLocationX)(snakeHeadLocationY) > 0) {
         gameOver = true
         timer.cancel()
+        window.drawString(50, 250, "Game over ! ")
       }
     }
 
@@ -110,6 +114,7 @@ object Snake extends App {
     if (snakeHeadLocationX >= boardSizeX - 1 || snakeHeadLocationX < 0 || snakeHeadLocationY >= boardSizeY - 1 || snakeHeadLocationY < 0) {
       gameOver = true
       timer.cancel()
+      window.drawString(50, 250, "Game over ! ")
     }
   }
 
@@ -123,6 +128,7 @@ object Snake extends App {
       if (board(randomX)(randomY) == 0) {
         board(randomX)(randomY) = -1
         isAppleGood = false
+        score += 1
       }
     }
   }
@@ -131,9 +137,11 @@ object Snake extends App {
   def displayGame(): Unit = {
 
     var posX: Int = -25
-    var posY: Int = -25
+    var posY: Int = 25
 
     window.frontBuffer.synchronized {
+      window.drawString(25, 25, "Score: " + score)
+
       for (i <- board.indices) {
         println("")
         posY += 25
