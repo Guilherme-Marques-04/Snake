@@ -6,8 +6,8 @@ import java.awt.event.{KeyAdapter, KeyEvent}
 
 object Snake extends App {
   // variables
-  val windowSizeX: Int = 650
-  val windowSizeY: Int = 650
+  val windowSizeX: Int = 625
+  val windowSizeY: Int = 625
   val window: FunGraphics = new FunGraphics(windowSizeX, windowSizeY, "Snake")
 
   // Create the array
@@ -87,7 +87,7 @@ object Snake extends App {
         displayGame()
       }
     }
-    timer.schedule(task, 1000L, 1000L)
+    timer.schedule(task, 100L, 100L)
   }
 
   def checkIfSnakeEat() : Unit = {
@@ -137,5 +137,6 @@ object Snake extends App {
       }
     }
   }
+  generateApple() // Generate for the first time
   moveSnake()
 }
