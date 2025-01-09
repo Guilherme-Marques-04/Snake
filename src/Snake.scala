@@ -6,13 +6,27 @@ import java.awt.event.{KeyAdapter, KeyEvent}
 
 object Snake extends App {
   // variables
+  val windowSizeX: Int = 650
+  val windowSizeY: Int = 650
+  val window: FunGraphics = new FunGraphics(windowSizeX, windowSizeY, "Snake")
+
+  // Create the array
+  val boardSizeX: Int = 25
+  val boardSizeY: Int = 25
+  var board: Array[Array[Int]] = Array.ofDim(boardSizeX, boardSizeY)
+
+  //generate snake
+  board = generateSnake(board)
+
+  var snakeSize: Int = 2
+
   var snakeDirection: Int = 0x27
-  var snakeHeadLocationX: Int = 0
-  var snakeHeadLocationY: Int = 0
+  var snakeHeadLocationX: Int = board(0).length / 2
+  var snakeHeadLocationY: Int = 2
 
   def generateSnake(board: Array[Array[Int]]): Array[Array[Int]] = {
 
-    var snakeSize: Int = 2
+    snakeSize = 2
     var out: Array[Array[Int]] = board.clone
 
     // put the snake in the middle left of the board
@@ -58,63 +72,45 @@ object Snake extends App {
     timer.schedule(task, 1000L, 1000L)
   }
 
-  // length of board
-  var x: Int = 25
-  var y: Int = 25
-
-  // Create the array
-  def createArray(): Array[Array[Int]] = {
-    val board: Array[Array[Int]] = Array.ofDim(x, y)
-    board
-  }
-
   // generate random position of apple
-  def generateApple(board: Array[Array[Int]]): Array[Array[Int]] = {
-    var x: Int = 1
-    while (x == 1) {
-      var randomX: Int = Random.between(0, x)
-      var randomY: Int = Random.between(0, y)
+  def generateApple(): Unit = {
+    var z: Int = 1
+    while (boardSizeX == 1) {
+      var randomX: Int = Random.between(0, boardSizeX)
+      var randomY: Int = Random.between(0, boardSizeY)
       if (board(randomX)(randomY) == 0) {
         board(randomX)(randomY) = -1
-        x = 0
+        z = 0
       }
     }
-    board
   }
 
   // display graphic
   def displayGame(): Unit = {
-    val land: FunGraphics = new FunGraphics(650, 650, "Snake")
-    var table: Array[Array[Int]] = createArray()
-    table = generateSnake(table)
 
     var posX: Int = -25
     var posY: Int = -25
-    var a: Array[Array[Int]] = generateApple()
+    generateApple()
 
-    for (i <- a.indices) {
+    for (i <- board.indices) {
       println("")
       posY += 25
       posX = -25
-      for (j <- a(i).indices) {
-        print(a(i)(j))
+      for (j <- board(i).indices) {
+        print(board(i)(j))
         posX += 25
-        if (a(i)(j) == 0) {
-          land.setColor(Color.blue)
-          land.drawFillRect(posX, posY, posX + 25, posY + 25)
-        } else if (a(i)(j) >= 1) {
-          land.setColor(Color.green)
-          land.drawFillRect(posX, posY, posX + 25, posY + 25)
-        } else if (a(i)(j) == -1) {
-          land.setColor(Color.red)
-          land.drawFillRect(posX, posY, posX + 25, posY + 25)
+        if (board(i)(j) == 0) {
+          window.setColor(Color.blue)
+          window.drawFillRect(posX, posY, posX + 25, posY + 25)
+        } else if (board(i)(j) >= 1) {
+          window.setColor(Color.green)
+          window.drawFillRect(posX, posY, posX + 25, posY + 25)
+        } else if (board(i)(j) == -1) {
+          window.setColor(Color.red)
+          window.drawFillRect(posX, posY, posX + 25, posY + 25)
         }
       }
     }
-    // variables
-    snakeHeadLocationX = table(0).length / 2
-    snakeHeadLocationY = 2
   }
-
   displayGame()
 }
