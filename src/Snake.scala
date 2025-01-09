@@ -6,8 +6,8 @@ import java.awt.event.{KeyAdapter, KeyEvent}
 
 object Snake extends App {
   // variables
-  val windowSizeX: Int = 625
-  val windowSizeY: Int = 625
+  val windowSizeX: Int = 600
+  val windowSizeY: Int = 600
   val window: FunGraphics = new FunGraphics(windowSizeX, windowSizeY, "Snake")
 
   // Create the array
@@ -20,7 +20,7 @@ object Snake extends App {
 
   var snakeSize: Int = 2
 
-  var snakeDirection: Int = 38
+  var snakeDirection: Int = 0x27
   var snakeHeadLocationX: Int = board(0).length / 2
   var snakeHeadLocationY: Int = 2
 
@@ -34,12 +34,13 @@ object Snake extends App {
 
   def generateSnake(): Unit = {
 
-    snakeSize = 2
+    snakeSize = 3
 
     // put the snake in the middle left of the board
     // body of the snake
     board(board(0).length / 2)(1) = 1
     board(board(0).length / 2)(2) = 2
+    //board(board(0).length / 2)(3) = 3
   }
 
   def moveSnake(): Unit = {
@@ -64,7 +65,7 @@ object Snake extends App {
 
         if (gameOver == false) {
 
-          board(snakeHeadLocationX)(snakeHeadLocationY) = snakeSize
+          board(snakeHeadLocationX)(snakeHeadLocationY) = snakeSize + 1
 
           window.setKeyManager(new KeyAdapter() {
             override def keyPressed(e: KeyEvent): Unit = {
@@ -117,8 +118,8 @@ object Snake extends App {
     // break while statement if apple isn't generate in the snake
     var isAppleGood: Boolean = true
     while (isAppleGood) {
-      randomX = Random.between(0, boardSizeX)
-      randomY = Random.between(0, boardSizeY)
+      randomX = Random.between(0, boardSizeX - 1)
+      randomY = Random.between(0, boardSizeY - 1)
       if (board(randomX)(randomY) == 0) {
         board(randomX)(randomY) = -1
         isAppleGood = false
