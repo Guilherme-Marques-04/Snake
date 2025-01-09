@@ -133,22 +133,24 @@ object Snake extends App {
     var posX: Int = -25
     var posY: Int = -25
 
-    for (i <- board.indices) {
-      println("")
-      posY += 25
-      posX = -25
-      for (j <- board(i).indices) {
-        print(board(i)(j))
-        posX += 25
-        if (board(i)(j) == 0) {
-          window.setColor(Color.blue)
-          window.drawFillRect(posX, posY, posX + 25, posY + 25)
-        } else if (board(i)(j) >= 1) {
-          window.setColor(Color.green)
-          window.drawFillRect(posX, posY, posX + 25, posY + 25)
-        } else if (board(i)(j) == -1) {
-          window.setColor(Color.red)
-          window.drawFillRect(posX, posY, posX + 25, posY + 25)
+    window.frontBuffer.synchronized {
+      for (i <- board.indices) {
+        println("")
+        posY += 25
+        posX = -25
+        for (j <- board(i).indices) {
+          print(board(i)(j))
+          posX += 25
+          if (board(i)(j) == 0) {
+            window.setColor(Color.blue)
+            window.drawFillRect(posX, posY, posX + 25, posY + 25)
+          } else if (board(i)(j) >= 1) {
+            window.setColor(Color.green)
+            window.drawFillRect(posX, posY, posX + 25, posY + 25)
+          } else if (board(i)(j) == -1) {
+            window.setColor(Color.red)
+            window.drawFillRect(posX, posY, posX + 25, posY + 25)
+          }
         }
       }
     }
