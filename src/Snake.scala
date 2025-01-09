@@ -74,13 +74,14 @@ object Snake extends App {
 
   // generate random position of apple
   def generateApple(): Unit = {
-    var z: Int = 1
-    while (boardSizeX == 1) {
+    // break while statement if apple isn't generate in the snake
+    var isAppleGood: Boolean = true
+    while (isAppleGood) {
       var randomX: Int = Random.between(0, boardSizeX)
       var randomY: Int = Random.between(0, boardSizeY)
       if (board(randomX)(randomY) == 0) {
         board(randomX)(randomY) = -1
-        z = 0
+        isAppleGood = false
       }
     }
   }
