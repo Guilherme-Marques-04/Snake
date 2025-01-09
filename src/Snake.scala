@@ -18,8 +18,9 @@ object Snake extends App {
     // put the snake in the middle left of the board
     // body of the snake
     out(out(0).length / 2)(1) = 1
-    // Head of the snake
     out(out(0).length / 2)(2) = 2
+    // Head of the snake
+    out(out(0).length / 2)(3) = 3
 
     return out
   }
@@ -60,7 +61,6 @@ object Snake extends App {
   // length of board
   var x: Int = 25
   var y: Int = 25
-  var length: Int = x*y
 
   // Create the array
   def createArray(): Array[Array[Int]] = {
@@ -71,15 +71,13 @@ object Snake extends App {
   // generate random position of apple
   def generateApple(): Array[Array[Int]] = {
     var board: Array[Array[Int]] = generateSnake(createArray())
+    var x: Int = 1
     while(x == 1) {
-      var x: Int = 0
-      var randomX: Int = Random.between(0, length)
-      var randomY: Int = Random.between(0, length)
+      var randomX: Int = Random.between(0, x)
+      var randomY: Int = Random.between(0, y)
       if (board(randomX)(randomY) == 0) {
         board(randomX)(randomY) = -1
-        x = 1
-      } else {
-        board(randomX)(randomY) = 0
+        x = 0
       }
     }
     board
@@ -93,18 +91,23 @@ object Snake extends App {
 
     var posX: Int = -25
     var posY: Int = -25
-    val a: Array[Array[Int]] = generateSnake(createArray())
+    var a: Array[Array[Int]] = generateApple()
 
     for(i <- a.indices){
+      println("")
       posY += 25
       posX = -25
       for(j <- a(i).indices){
+        print(a(i)(j))
         posX += 25
         if(a(i)(j) == 0){
           land.setColor(Color.blue)
           land.drawFillRect(posX, posY, posX+25, posY+25)
         } else if(a(i)(j) >= 1) {
           land.setColor(Color.green)
+          land.drawFillRect(posX, posY, posX + 25, posY + 25)
+        } else if(a(i)(j) == -1){
+          land.setColor(Color.red)
           land.drawFillRect(posX, posY, posX + 25, posY + 25)
         }
       }
