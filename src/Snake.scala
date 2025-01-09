@@ -47,17 +47,21 @@ object Snake extends App {
       def run() = {
         snakeDirection match {
           case 0x25 // left
-          => board(snakeHeadLocationY - 1)(snakeHeadLocationX)
+          => snakeHeadLocationY -= 1
 
           case 0x26 // up
-          => board(snakeHeadLocationY)(snakeHeadLocationX - 1)
+          => snakeHeadLocationX -= 1
 
           case 0x27 // right
-          => board(snakeHeadLocationY + 1)(snakeHeadLocationX)
+          => snakeHeadLocationY += 1
 
           case 0x28 // down
-          => board(snakeHeadLocationY)(snakeHeadLocationX + 1)
+          => snakeHeadLocationX += 1
         }
+
+        checkSnakeEat()
+
+        board(snakeHeadLocationX)(snakeHeadLocationY) += 1
 
         land.setKeyManager(new KeyAdapter() {
           override def keyPressed(e: KeyEvent): Unit = {
@@ -67,9 +71,16 @@ object Snake extends App {
             if (e.getKeyCode == KeyEvent.VK_DOWN && snakeDirection != KeyEvent.VK_UP) snakeDirection = 0x28
           }
         })
+
+        // If the snake eat the apple
+        if (snakeHeadLocationX )
       }
     }
     timer.schedule(task, 1000L, 1000L)
+  }
+
+  def checkSnakeEat() : Unit = {
+
   }
 
   // generate random position of apple
@@ -91,7 +102,6 @@ object Snake extends App {
 
     var posX: Int = -25
     var posY: Int = -25
-    generateApple()
 
     for (i <- board.indices) {
       println("")
