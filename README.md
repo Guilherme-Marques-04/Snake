@@ -6,13 +6,24 @@ Rétro Snake est un jeu 2D. Le but du jeu est de manger des pommes pour faire gr
 
 <p float="left">
   <img src="https://github.com/user-attachments/assets/d2dd0e00-8f50-49bd-9de9-28cadbc9b28d" width=30% height=30%>
-  <img src="https://github.com/user-attachments/assets/d152b356-fe00-4b83-8d9f-5742315d206d" width=30% height=30%>
-  <img src="https://github.com/user-attachments/assets/4493aeae-f725-4e05-af48-de868bc6ab47" width=30% height=30%>
+  <img src="https://github.com/user-attachments/assets/9f7cb7e2-4b71-4030-8f80-7ef4b7b7451b" width=30% height=30%>
+  <img src="https://github.com/user-attachments/assets/b7b54e69-b229-42b7-bf94-f57e029592a5" width=30% height=30%>
 </p>
 
 - Sur le première image c'est le menu de notre jeu
 - Sur la deuxième image c'est le déroulement du jeu
 - La troisème image montre la fin d'une partie
+
+# Structure
+```
+📁 <root>
+├── 📁 res             # Project ressources
+│   └── 📁 lib         # contains all the libraries required to run the project
+├── 📁 src             # Code of the project 
+│   ├── 📄 Snake.scala # Primary Scala file. Use this to start the project
+│   └── 📁 res         # Ressources called in code
+└──     └── 📁 img     # Contains images use in the program
+```
 
 # Mode d'emploi
 
