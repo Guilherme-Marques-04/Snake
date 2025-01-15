@@ -1,12 +1,8 @@
 import hevs.graphics.FunGraphics
-import hevs.graphics.utils.GraphicsBitmap
 
 import java.awt.Color
 import scala.util.Random
 import java.awt.event.{KeyAdapter, KeyEvent, MouseAdapter, MouseEvent}
-
-import java.io.{BufferedReader, FileReader}
-import scala.io.{BufferedSource, Source}
 
 
 object Snake extends App {
@@ -22,7 +18,7 @@ object Snake extends App {
 
   // score
   var score: Int = -1
-  var bestScore : Int = -1
+  var bestScore: Int = -1
 
   // Snake Proprieties
   var snakeSize: Int = 2
@@ -41,18 +37,18 @@ object Snake extends App {
   var timer = new java.util.Timer()
 
   // Show the intro menu at boot
-  def showMenu() : Unit = {
+  def showMenu(): Unit = {
 
     // Show image
-    window.drawTransformedPicture(windowSizeX / 2,windowSizeY / 4,0,0.60,"/res/img/SnakeTitle.png")
+    window.drawTransformedPicture(windowSizeX / 2, windowSizeY / 4, 0, 0.60, "/res/img/SnakeTitle.png")
 
     // Draw buttons
     window.setColor(Color.gray)
-    window.drawFillRect(625 / 2 - 160, windowSizeY / 10 * 5,300,75)
+    window.drawFillRect(625 / 2 - 160, windowSizeY / 10 * 5, 300, 75)
     window.setColor(Color.WHITE)
     window.drawString(625 / 2 - 160 + 100, windowSizeY / 10 * 5 + 52, "Play", fontSize = 50)
     window.setColor(Color.red)
-    window.drawFillRect(625 / 2 - 160, windowSizeY / 8 * 5,300,75)
+    window.drawFillRect(625 / 2 - 160, windowSizeY / 8 * 5, 300, 75)
     window.setColor(Color.WHITE)
     window.drawString(625 / 2 - 160 + 100, windowSizeY / 8 * 5 + 52, "Quit", fontSize = 50)
 
@@ -212,6 +208,7 @@ object Snake extends App {
       }
     }
 
+    // best score
     if (bestScore < score) {
       bestScore = score
     }
@@ -222,7 +219,7 @@ object Snake extends App {
   def generateApple(): Unit = {
     // break while statement if apple isn't generate in the snake
     var isAppleGood: Boolean = true
-    while(isAppleGood) {
+    while (isAppleGood) {
       randomX = Random.between(0, boardSizeX - 1)
       randomY = Random.between(0, boardSizeY - 1)
       if (board(randomX)(randomY) == 0) {
@@ -242,28 +239,38 @@ object Snake extends App {
     window.frontBuffer.synchronized {
       window.setColor(Color.white)
       window.drawFillRect(0, 0, 600, 50)
+
+      // Write the actual score
       window.drawString(25, 33, "Score: " + score, fontSize = 20)
+
+      // Draw the best score
       window.drawString(windowSizeX - 150, 33, s"Best Score: ${if (bestScore == -1) "-" else bestScore}", fontSize = 20)
+
+      // Draw the logo of the game
       window.drawTransformedPicture(windowSizeX / 2, 25, 0, 0.20, "/res/img/SnakeTitle.png")
 
+      // draw game with the content of the board
       for (i <- board.indices) {
         posY += 25
         posX = -25
+
         for (j <- board(i).indices) {
           posX += 25
+
           if (board(i)(j) == 0) {
             window.setColor(Color.lightGray)
-            window.drawFillRect(posX, posY, posX + 25, posY + 25)
+            window.drawFillRect(posX, posY, posX + 25, posY + 25) // Draw the board
           } else if (board(i)(j) >= 1) {
             window.setColor(new Color(0, 204, 0))
-            window.drawFillRect(posX, posY, posX + 25, posY + 25)
+            window.drawFillRect(posX, posY, posX + 25, posY + 25) // Draw the snake body
+
             if (board(i)(j) == snakeSize) {
               window.setColor(new Color(0, 153, 51))
-              window.drawFillRect(posX, posY, posX + 25, posY + 25)
+              window.drawFillRect(posX, posY, posX + 25, posY + 25) // Draw the snake head
             }
           } else if (board(i)(j) == -1) {
             window.setColor(Color.red)
-            window.drawFillRect(posX, posY, posX + 25, posY + 25)
+            window.drawFillRect(posX, posY, posX + 25, posY + 25) // Draw the apple
           }
         }
       }
