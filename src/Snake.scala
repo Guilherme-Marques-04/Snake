@@ -5,6 +5,10 @@ import java.awt.Color
 import scala.util.Random
 import java.awt.event.{KeyAdapter, KeyEvent, MouseAdapter, MouseEvent}
 
+import java.io.{BufferedReader, FileReader}
+import scala.io.{BufferedSource, Source}
+
+
 object Snake extends App {
   // variables
   val windowSizeX: Int = 600
@@ -179,7 +183,6 @@ object Snake extends App {
       timer.cancel()
       window.drawString(160, 275, "Game over!", fontSize = 50)
       window.drawString(160, 325, "Press 'R' to Restart or 'Q' to Quit", fontSize = 20)
-      return
     }
 
     // if the snake eat the apple
@@ -222,7 +225,8 @@ object Snake extends App {
     window.frontBuffer.synchronized {
       window.setColor(Color.white)
       window.drawFillRect(0,0,600,50)
-      window.drawString(25, 25, "Score: " + score)
+      window.drawString(25, 33, "Score: " + score,fontSize = 20)
+      window.drawTransformedPicture(windowSizeX / 2,25,0,0.20,"/res/img/SnakeTitle.png")
 
       for (i <- board.indices) {
         posY += 25
@@ -233,7 +237,7 @@ object Snake extends App {
             window.setColor(Color.lightGray)
             window.drawFillRect(posX, posY, posX + 25, posY + 25)
           } else if (board(i)(j) >= 1) {
-            window.setColor(Color.green)
+            window.setColor(new Color(0,204,0))
             window.drawFillRect(posX, posY, posX + 25, posY + 25)
             if(board(i)(j) == snakeSize){
               window.setColor(new Color(0,153,51))
@@ -247,5 +251,6 @@ object Snake extends App {
       }
     }
   }
+
   showMenu()
 }
