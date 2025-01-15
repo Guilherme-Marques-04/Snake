@@ -31,7 +31,7 @@ object Snake extends App {
 
   var gameOver: Boolean = false
 
-  val timer = new java.util.Timer()
+  var timer = new java.util.Timer()
 
   def showMenu() : Unit = {
 
@@ -77,7 +77,56 @@ object Snake extends App {
         }
       }
     })
+
+    window.setKeyManager(new KeyAdapter() {
+      override def keyPressed(e: KeyEvent): Unit = {
+        if (gameOver) {
+          e.getKeyCode match {
+            case KeyEvent.VK_R => resetGame() // Redémarrer le jeu
+            case KeyEvent.VK_Q => System.exit(0) // Quitter le jeu
+            case _ => // Rien faire pour d'autres touches
+          }
+        }
+      }
+    })
+
+    window.setKeyManager(new KeyAdapter() {
+      override def keyPressed(e: KeyEvent): Unit = {
+        if (!gameOver) {
+          e.getKeyCode match {
+            case KeyEvent.VK_LEFT if snakeDirection != KeyEvent.VK_RIGHT => snakeDirection = 0x25
+            case KeyEvent.VK_UP if snakeDirection != KeyEvent.VK_DOWN => snakeDirection = 0x26
+            case KeyEvent.VK_RIGHT if snakeDirection != KeyEvent.VK_LEFT => snakeDirection = 0x27
+            case KeyEvent.VK_DOWN if snakeDirection != KeyEvent.VK_UP => snakeDirection = 0x28
+            case _ => // Rien faire pour d'autres touches
+          }
+        }
+      }
+    })
   }
+
+  def resetGame(): Unit = {
+    // Réinitialisez toutes les variables de jeu
+    board = Array.ofDim[Int](boardSizeX, boardSizeY)
+    snakeSize = 3
+    snakeDirection = 0x27
+    snakeHeadLocationX = board(0).length / 2
+    snakeHeadLocationY = 3
+    score = -1
+    gameOver = false
+
+    // Annulez l'ancien timer et créez-en un nouveau
+    timer.cancel()
+    timer = new java.util.Timer()
+
+    if (!gameOver) {
+      generateSnake() // Générer le serpent
+      generateApple() // Générer la première pomme
+      moveSnake() // Démarrer le jeu
+    }
+  }
+
+
 
   def generateSnake(): Unit = {
 
@@ -92,39 +141,21 @@ object Snake extends App {
 
   def moveSnake(): Unit = {
     val task = new java.util.TimerTask {
-
       def run() = {
         snakeDirection match {
-          case 0x25 // left
-          => snakeHeadLocationY -= 1
-
-          case 0x26 // up
-          => snakeHeadLocationX -= 1
-
-          case 0x27 // right
-          => snakeHeadLocationY += 1
-
-          case 0x28 // down
-          => snakeHeadLocationX += 1
+          case 0x25 => snakeHeadLocationY -= 1
+          case 0x26 => snakeHeadLocationX -= 1
+          case 0x27 => snakeHeadLocationY += 1
+          case 0x28 => snakeHeadLocationX += 1
         }
 
         checkSnakeInteraction()
 
-        if (gameOver == false) {
-
+        if (!gameOver) {
           board(snakeHeadLocationX)(snakeHeadLocationY) = snakeSize + 1
 
-          window.setKeyManager(new KeyAdapter() {
-            override def keyPressed(e: KeyEvent): Unit = {
-              if (e.getKeyCode == KeyEvent.VK_LEFT && snakeDirection != KeyEvent.VK_RIGHT) snakeDirection = 0x25
-              else if (e.getKeyCode == KeyEvent.VK_UP && snakeDirection != KeyEvent.VK_DOWN) snakeDirection = 0x26
-              else if (e.getKeyCode == KeyEvent.VK_RIGHT && snakeDirection != KeyEvent.VK_LEFT) snakeDirection = 0x27
-              else if (e.getKeyCode == KeyEvent.VK_DOWN && snakeDirection != KeyEvent.VK_UP) snakeDirection = 0x28
-            }
-          })
-
           for (i <- board.indices) {
-            for (j <- board.indices) {
+            for (j <- board(i).indices) {
               if (board(i)(j) > 0) {
                 board(i)(j) -= 1
               }
@@ -134,32 +165,38 @@ object Snake extends App {
         }
       }
     }
+
+    // Planifiez la tâche si le jeu n'est pas déjà en cours
     timer.schedule(task, 100L, 100L)
   }
 
+
   def checkSnakeInteraction(): Unit = {
-    // Check if the snake eat the apple
+    // Vérifiez si le serpent est en dehors des limites
+    if (snakeHeadLocationX < 0 || snakeHeadLocationX >= boardSizeX - 1 ||
+      snakeHeadLocationY < 0 || snakeHeadLocationY >= boardSizeY - 1) {
+      gameOver = true
+      timer.cancel()
+      window.drawString(160, 275, "Game over!", fontSize = 50)
+      window.drawString(160, 325, "Press 'R' to Restart or 'Q' to Quit", fontSize = 20)
+      return
+    }
+
+    // Vérifiez si le serpent mange la pomme
     if (snakeHeadLocationX == randomX && snakeHeadLocationY == randomY) {
       generateApple()
       snakeSize += 1
     }
 
-    if (snakeHeadLocationX >= 0 && snakeHeadLocationY >= 0) {
-      // Check if the snake hit himself
-      if (board(snakeHeadLocationX)(snakeHeadLocationY) > 0) {
-        gameOver = true
-        timer.cancel()
-        window.drawString(160, 275, "Game over !", fontSize = 50)
-      }
-    }
-
-    // Check if the snake hit the walls
-    if (snakeHeadLocationX >= boardSizeX - 1 || snakeHeadLocationX < 0 || snakeHeadLocationY >= boardSizeY - 1 || snakeHeadLocationY < 0) {
+    // Vérifiez si le serpent se mord lui-même
+    if (board(snakeHeadLocationX)(snakeHeadLocationY) > 0) {
       gameOver = true
       timer.cancel()
-      window.drawString(160, 275, "Game over !",fontSize = 50)
+      window.drawString(160, 275, "Game over!", fontSize = 50)
+      window.drawString(160, 325, "Press 'R' to Restart or 'Q' to Quit", fontSize = 20)
     }
   }
+
 
   // generate random position of apple
   def generateApple(): Unit = {
