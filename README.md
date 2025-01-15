@@ -6,8 +6,8 @@ Rétro Snake est un jeu 2D. Le but du jeu est de manger des pommes pour faire gr
 
 <p float="left">
   <img src="https://github.com/user-attachments/assets/d2dd0e00-8f50-49bd-9de9-28cadbc9b28d" width=30% height=30%>
-  <img src="https://github.com/user-attachments/assets/a970f73a-d9c4-4bfd-ba44-c4e8f56da76e" width=30% height=30%>
-  <img src="https://github.com/user-attachments/assets/9bc299eb-1880-4266-a478-6ad6ee2c44d0" width=30% height=30%>
+  <img src="https://github.com/user-attachments/assets/d152b356-fe00-4b83-8d9f-5742315d206d" width=30% height=30%>
+  <img src="https://github.com/user-attachments/assets/4493aeae-f725-4e05-af48-de868bc6ab47" width=30% height=30%>
 </p>
 
 - Sur le première image c'est le menu de notre jeu
