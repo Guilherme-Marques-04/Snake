@@ -235,6 +235,10 @@ object Snake extends App {
           } else if (board(i)(j) >= 1) {
             window.setColor(Color.green)
             window.drawFillRect(posX, posY, posX + 25, posY + 25)
+            if(board(i)(j) == snakeSize){
+              window.setColor(new Color(0,153,51))
+              window.drawFillRect(posX, posY, posX + 25, posY + 25)
+            }
           } else if (board(i)(j) == -1) {
             window.setColor(Color.red)
             window.drawFillRect(posX, posY, posX + 25, posY + 25)
@@ -243,6 +247,5 @@ object Snake extends App {
       }
     }
   }
-
   showMenu()
 }
