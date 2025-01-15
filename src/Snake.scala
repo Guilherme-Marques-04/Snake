@@ -22,6 +22,7 @@ object Snake extends App {
 
   // score
   var score: Int = -1
+  var bestScore: Int = -1
 
   var snakeSize: Int = 2
 
@@ -37,18 +38,18 @@ object Snake extends App {
 
   var timer = new java.util.Timer()
 
-  def showMenu() : Unit = {
+  def showMenu(): Unit = {
 
     // Show image
-    window.drawTransformedPicture(windowSizeX / 2,windowSizeY / 4,0,0.60,"/res/img/SnakeTitle.png")
+    window.drawTransformedPicture(windowSizeX / 2, windowSizeY / 4, 0, 0.60, "/res/img/SnakeTitle.png")
 
     // Draw buttons
     window.setColor(Color.gray)
-    window.drawFillRect(625 / 2 - 160, windowSizeY / 10 * 5,300,75)
+    window.drawFillRect(625 / 2 - 160, windowSizeY / 10 * 5, 300, 75)
     window.setColor(Color.WHITE)
     window.drawString(625 / 2 - 160 + 100, windowSizeY / 10 * 5 + 52, "Play", fontSize = 50)
     window.setColor(Color.red)
-    window.drawFillRect(625 / 2 - 160, windowSizeY / 8 * 5,300,75)
+    window.drawFillRect(625 / 2 - 160, windowSizeY / 8 * 5, 300, 75)
     window.setColor(Color.WHITE)
     window.drawString(625 / 2 - 160 + 100, windowSizeY / 8 * 5 + 52, "Quit", fontSize = 50)
 
@@ -131,7 +132,6 @@ object Snake extends App {
   }
 
 
-
   def generateSnake(): Unit = {
     // initial size of the snake
     snakeSize = 3
@@ -183,6 +183,9 @@ object Snake extends App {
       timer.cancel()
       window.drawString(160, 275, "Game over!", fontSize = 50)
       window.drawString(160, 325, "Press 'R' to Restart or 'Q' to Quit", fontSize = 20)
+      if (bestScore < score) {
+        bestScore = score
+      }
     }
 
     // if the snake eat the apple
@@ -192,11 +195,14 @@ object Snake extends App {
     }
 
     // if the snake hit itself
-    if (board(snakeHeadLocationX)(snakeHeadLocationY) > 0) {
+    if (snakeHeadLocationX >= 0 && snakeHeadLocationY >= 0) {
       gameOver = true
       timer.cancel()
       window.drawString(160, 275, "Game over!", fontSize = 50)
       window.drawString(160, 325, "Press 'R' to Restart or 'Q' to Quit", fontSize = 20)
+      if (bestScore < score) {
+        bestScore = score
+      }
     }
   }
 
@@ -205,7 +211,7 @@ object Snake extends App {
   def generateApple(): Unit = {
     // break while statement if apple isn't generate in the snake
     var isAppleGood: Boolean = true
-    while(isAppleGood) {
+    while (isAppleGood) {
       randomX = Random.between(0, boardSizeX - 1)
       randomY = Random.between(0, boardSizeY - 1)
       if (board(randomX)(randomY) == 0) {
@@ -224,9 +230,10 @@ object Snake extends App {
 
     window.frontBuffer.synchronized {
       window.setColor(Color.white)
-      window.drawFillRect(0,0,600,50)
-      window.drawString(25, 33, "Score: " + score,fontSize = 20)
-      window.drawTransformedPicture(windowSizeX / 2,25,0,0.20,"/res/img/SnakeTitle.png")
+      window.drawFillRect(0, 0, 600, 50)
+      window.drawString(25, 33, "Score: " + score, fontSize = 20)
+      window.drawString(windowSizeX - 150, 33, s"Best Score: ${if (bestScore == -1) "-" else bestScore}", fontSize = 20)
+      window.drawTransformedPicture(windowSizeX / 2, 25, 0, 0.20, "/res/img/SnakeTitle.png")
 
       for (i <- board.indices) {
         posY += 25
@@ -237,10 +244,10 @@ object Snake extends App {
             window.setColor(Color.lightGray)
             window.drawFillRect(posX, posY, posX + 25, posY + 25)
           } else if (board(i)(j) >= 1) {
-            window.setColor(new Color(0,204,0))
+            window.setColor(new Color(0, 204, 0))
             window.drawFillRect(posX, posY, posX + 25, posY + 25)
-            if(board(i)(j) == snakeSize){
-              window.setColor(new Color(0,153,51))
+            if (board(i)(j) == snakeSize) {
+              window.setColor(new Color(0, 153, 51))
               window.drawFillRect(posX, posY, posX + 25, posY + 25)
             }
           } else if (board(i)(j) == -1) {
