@@ -22,10 +22,10 @@ object Snake extends App {
 
   // score
   var score: Int = -1
-  var bestScore: Int = -1
+  var bestScore : Int = -1
 
+  // Snake Proprieties
   var snakeSize: Int = 2
-
   var snakeDirection: Int = 0x27
   var snakeHeadLocationX: Int = board(0).length / 2
   var snakeHeadLocationY: Int = 3
@@ -34,22 +34,25 @@ object Snake extends App {
   var randomX: Int = 0
   var randomY: Int = 0
 
+  // game state
   var gameOver: Boolean = false
 
+  // timer
   var timer = new java.util.Timer()
 
-  def showMenu(): Unit = {
+  // Show the intro menu at boot
+  def showMenu() : Unit = {
 
     // Show image
-    window.drawTransformedPicture(windowSizeX / 2, windowSizeY / 4, 0, 0.60, "/res/img/SnakeTitle.png")
+    window.drawTransformedPicture(windowSizeX / 2,windowSizeY / 4,0,0.60,"/res/img/SnakeTitle.png")
 
     // Draw buttons
     window.setColor(Color.gray)
-    window.drawFillRect(625 / 2 - 160, windowSizeY / 10 * 5, 300, 75)
+    window.drawFillRect(625 / 2 - 160, windowSizeY / 10 * 5,300,75)
     window.setColor(Color.WHITE)
     window.drawString(625 / 2 - 160 + 100, windowSizeY / 10 * 5 + 52, "Play", fontSize = 50)
     window.setColor(Color.red)
-    window.drawFillRect(625 / 2 - 160, windowSizeY / 8 * 5, 300, 75)
+    window.drawFillRect(625 / 2 - 160, windowSizeY / 8 * 5,300,75)
     window.setColor(Color.WHITE)
     window.drawString(625 / 2 - 160 + 100, windowSizeY / 8 * 5 + 52, "Quit", fontSize = 50)
 
@@ -82,6 +85,7 @@ object Snake extends App {
       }
     })
 
+    // get the pressed key to restart or quit
     window.setKeyManager(new KeyAdapter() {
       override def keyPressed(e: KeyEvent): Unit = {
         if (gameOver) {
@@ -94,6 +98,7 @@ object Snake extends App {
       }
     })
 
+    // get the pressed key to move the snake direction
     window.setKeyManager(new KeyAdapter() {
       override def keyPressed(e: KeyEvent): Unit = {
         if (!gameOver) {
@@ -109,6 +114,7 @@ object Snake extends App {
     })
   }
 
+  // reset the game and start a new game
   def resetGame(): Unit = {
     // Reset variables
     board = Array.ofDim[Int](boardSizeX, boardSizeY)
@@ -131,7 +137,7 @@ object Snake extends App {
     }
   }
 
-
+  // Generate the snake on the board
   def generateSnake(): Unit = {
     // initial size of the snake
     snakeSize = 3
@@ -143,6 +149,7 @@ object Snake extends App {
     board(board(0).length / 2)(3) = 3
   }
 
+  // move the snake by calculate is mouvement
   def moveSnake(): Unit = {
     val task = new java.util.TimerTask {
       def run() = {
@@ -153,8 +160,10 @@ object Snake extends App {
           case 0x28 => snakeHeadLocationX += 1
         }
 
+        // check if the snake hit something or eat an apple
         checkSnakeInteraction()
 
+        // make the snake move
         if (!gameOver) {
           board(snakeHeadLocationX)(snakeHeadLocationY) = snakeSize + 1
 
@@ -165,6 +174,8 @@ object Snake extends App {
               }
             }
           }
+
+          // refresh the screen
           displayGame()
         }
       }
@@ -174,7 +185,7 @@ object Snake extends App {
     timer.schedule(task, 100L, 100L)
   }
 
-
+  // check if the snake hit the wall or eat an apple or hit itself
   def checkSnakeInteraction(): Unit = {
     // check if the snake is inside the board
     if (snakeHeadLocationX < 0 || snakeHeadLocationX >= boardSizeX - 1 ||
@@ -196,12 +207,14 @@ object Snake extends App {
 
     // if the snake hit itself
     if (snakeHeadLocationX >= 0 && snakeHeadLocationY >= 0) {
-      gameOver = true
-      timer.cancel()
-      window.drawString(160, 275, "Game over!", fontSize = 50)
-      window.drawString(160, 325, "Press 'R' to Restart or 'Q' to Quit", fontSize = 20)
-      if (bestScore < score) {
-        bestScore = score
+      if (board(snakeHeadLocationX)(snakeHeadLocationY) > 0) {
+        gameOver = true
+        timer.cancel()
+        window.drawString(160, 275, "Game over!", fontSize = 50)
+        window.drawString(160, 325, "Press 'R' to Restart or 'Q' to Quit", fontSize = 20)
+        if (bestScore < score) {
+          bestScore = score
+        }
       }
     }
   }
@@ -211,7 +224,7 @@ object Snake extends App {
   def generateApple(): Unit = {
     // break while statement if apple isn't generate in the snake
     var isAppleGood: Boolean = true
-    while (isAppleGood) {
+    while(isAppleGood) {
       randomX = Random.between(0, boardSizeX - 1)
       randomY = Random.between(0, boardSizeY - 1)
       if (board(randomX)(randomY) == 0) {
@@ -259,5 +272,6 @@ object Snake extends App {
     }
   }
 
+  // show the menu at boot
   showMenu()
 }
