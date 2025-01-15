@@ -194,9 +194,6 @@ object Snake extends App {
       timer.cancel()
       window.drawString(160, 275, "Game over!", fontSize = 50)
       window.drawString(160, 325, "Press 'R' to Restart or 'Q' to Quit", fontSize = 20)
-      if (bestScore < score) {
-        bestScore = score
-      }
     }
 
     // if the snake eat the apple
@@ -212,10 +209,11 @@ object Snake extends App {
         timer.cancel()
         window.drawString(160, 275, "Game over!", fontSize = 50)
         window.drawString(160, 325, "Press 'R' to Restart or 'Q' to Quit", fontSize = 20)
-        if (bestScore < score) {
-          bestScore = score
-        }
       }
+    }
+
+    if (bestScore < score) {
+      bestScore = score
     }
   }
 
