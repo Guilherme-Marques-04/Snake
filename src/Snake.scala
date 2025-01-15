@@ -49,7 +49,6 @@ object Snake extends App {
     window.drawString(625 / 2 - 160 + 100, windowSizeY / 8 * 5 + 52, "Quit", fontSize = 50)
 
     // This will handle the mouse
-
     window.addMouseListener(new MouseAdapter() {
       override def mouseClicked(e: MouseEvent): Unit = {
         val event = e
@@ -82,9 +81,9 @@ object Snake extends App {
       override def keyPressed(e: KeyEvent): Unit = {
         if (gameOver) {
           e.getKeyCode match {
-            case KeyEvent.VK_R => resetGame() // Redémarrer le jeu
-            case KeyEvent.VK_Q => System.exit(0) // Quitter le jeu
-            case _ => // Rien faire pour d'autres touches
+            case KeyEvent.VK_R => resetGame()
+            case KeyEvent.VK_Q => System.exit(0)
+            case _ =>
           }
         }
       }
@@ -98,7 +97,7 @@ object Snake extends App {
             case KeyEvent.VK_UP if snakeDirection != KeyEvent.VK_DOWN => snakeDirection = 0x26
             case KeyEvent.VK_RIGHT if snakeDirection != KeyEvent.VK_LEFT => snakeDirection = 0x27
             case KeyEvent.VK_DOWN if snakeDirection != KeyEvent.VK_UP => snakeDirection = 0x28
-            case _ => // Rien faire pour d'autres touches
+            case _ =>
           }
         }
       }
@@ -106,7 +105,7 @@ object Snake extends App {
   }
 
   def resetGame(): Unit = {
-    // Réinitialisez toutes les variables de jeu
+    // Reset variables
     board = Array.ofDim[Int](boardSizeX, boardSizeY)
     snakeSize = 3
     snakeDirection = 0x27
@@ -115,21 +114,22 @@ object Snake extends App {
     score = -1
     gameOver = false
 
-    // Annulez l'ancien timer et créez-en un nouveau
+    // Cancel the timer and start a new timer
     timer.cancel()
     timer = new java.util.Timer()
 
+    // if not gameOver
     if (!gameOver) {
-      generateSnake() // Générer le serpent
-      generateApple() // Générer la première pomme
-      moveSnake() // Démarrer le jeu
+      generateSnake()
+      generateApple()
+      moveSnake()
     }
   }
 
 
 
   def generateSnake(): Unit = {
-
+    // initial size of the snake
     snakeSize = 3
 
     // put the snake in the middle left of the board
@@ -166,13 +166,13 @@ object Snake extends App {
       }
     }
 
-    // Planifiez la tâche si le jeu n'est pas déjà en cours
+    // timer
     timer.schedule(task, 100L, 100L)
   }
 
 
   def checkSnakeInteraction(): Unit = {
-    // Vérifiez si le serpent est en dehors des limites
+    // check if the snake is inside the board
     if (snakeHeadLocationX < 0 || snakeHeadLocationX >= boardSizeX - 1 ||
       snakeHeadLocationY < 0 || snakeHeadLocationY >= boardSizeY - 1) {
       gameOver = true
@@ -182,13 +182,13 @@ object Snake extends App {
       return
     }
 
-    // Vérifiez si le serpent mange la pomme
+    // if the snake eat the apple
     if (snakeHeadLocationX == randomX && snakeHeadLocationY == randomY) {
       generateApple()
       snakeSize += 1
     }
 
-    // Vérifiez si le serpent se mord lui-même
+    // if the snake hit itself
     if (board(snakeHeadLocationX)(snakeHeadLocationY) > 0) {
       gameOver = true
       timer.cancel()
