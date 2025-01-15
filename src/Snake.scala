@@ -1,13 +1,15 @@
 import hevs.graphics.FunGraphics
+import hevs.graphics.utils.GraphicsBitmap
+
 import java.awt.Color
 import scala.util.Random
-import java.awt.event.{KeyAdapter, KeyEvent}
+import java.awt.event.{KeyAdapter, KeyEvent, MouseAdapter, MouseEvent}
 
 object Snake extends App {
   // variables
   val windowSizeX: Int = 600
   val windowSizeY: Int = 650
-  val window: FunGraphics = new FunGraphics(windowSizeX, windowSizeY, "Snake")
+  val window: FunGraphics = new FunGraphics(windowSizeX, windowSizeY, "Retro Snake")
 
   // Create the array
   val boardSizeX: Int = 25
@@ -30,6 +32,52 @@ object Snake extends App {
   var gameOver: Boolean = false
 
   val timer = new java.util.Timer()
+
+  def showMenu() : Unit = {
+
+    // Show image
+    window.drawTransformedPicture(windowSizeX / 2,windowSizeY / 4,0,0.60,"/res/img/SnakeTitle.png")
+
+    // Draw buttons
+    window.setColor(Color.gray)
+    window.drawFillRect(625 / 2 - 160, windowSizeY / 10 * 5,300,75)
+    window.setColor(Color.WHITE)
+    window.drawString(625 / 2 - 160 + 100, windowSizeY / 10 * 5 + 52, "Play", fontSize = 50)
+    window.setColor(Color.red)
+    window.drawFillRect(625 / 2 - 160, windowSizeY / 8 * 5,300,75)
+    window.setColor(Color.WHITE)
+    window.drawString(625 / 2 - 160 + 100, windowSizeY / 8 * 5 + 52, "Quit", fontSize = 50)
+
+    // This will handle the mouse
+
+    window.addMouseListener(new MouseAdapter() {
+      override def mouseClicked(e: MouseEvent): Unit = {
+        val event = e
+
+        // Get the mouse position from the event
+        val posClickX = event.getX
+        val posClickY = event.getY
+
+        // Check if play button is clicked
+        if (posClickX >= 625 / 2 - 160
+          && posClickX <= 625 / 2 - 160 + 300
+          && posClickY >= windowSizeY / 10 * 5
+          && posClickY <= windowSizeY / 10 * 5 + 75) {
+          generateSnake() // Generate the snake
+          generateApple() // Generate for the first time
+          moveSnake()
+        }
+
+        // Check if quit button is clicked
+        if (posClickX >= 625 / 2 - 160
+          && posClickX <= 625 / 2 - 160 + 300
+          && posClickY >= windowSizeY / 8 * 5
+          && posClickY <= windowSizeY / 8 * 5 + 75) {
+          System.exit(0)
+        }
+      }
+    })
+  }
 
   def generateSnake(): Unit = {
 
@@ -158,7 +206,6 @@ object Snake extends App {
       }
     }
   }
-  generateSnake() // Generate the snake
-  generateApple() // Generate for the first time
-  moveSnake()
+
+  showMenu()
 }
